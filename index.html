@@ -3,530 +3,843 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boomika S | Textile Portfolio</title>
-  <meta name="description" content="Portfolio of Boomika S – Textile Technology undergraduate focused on merchandising, fabric sourcing, and quality control." />
+  <title>Boomika | Creative Engineering Portfolio</title>
+  <meta name="description" content="Portfolio of Boomika - Creative Engineering Student exploring technology, design, innovation & storytelling." />
+  <meta name="keywords" content="Boomika, Creative Engineering, Web Development, IoT, UI/UX Design, Portfolio" />
+  <meta name="author" content="Boomika" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <style>
-    body {
-      box-sizing: border-box;
-      font-family: 'DM Sans', sans-serif;
-      background-color: #f8fafc;
-      color: #334155;
-      overflow-x: hidden;
-    }
-    .mono { font-family: 'Space Mono', monospace; }
-
-    .card-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-    .card-hover:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 40px -10px rgba(15, 118, 110, 0.15);
-      border-color: #99f6e4;
-    }
-
-    .fiber-pattern {
-      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0 Q45 15 30 30 Q15 45 30 60' stroke='%230f766e' stroke-opacity='0.04' fill='none' stroke-width='1'/%3E%3Cpath d='M0 30 Q15 15 30 30 Q45 45 60 30' stroke='%23334155' stroke-opacity='0.04' fill='none' stroke-width='1'/%3E%3C/svg%3E");
-      background-attachment: fixed;
-    }
-
-    .nav-link { position: relative; }
-    .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, #0f766e, #0e7490); transition: width 0.3s ease; }
-    .nav-link:hover::after { width: 100%; }
-
-    .skill-bar { background: linear-gradient(90deg, #0f766e, #0e7490); border-radius: 4px; height: 6px; }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .page-load-fade { animation: fadeInUp 1s ease-out forwards; }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-    }
-    .animate-float { animation: float 6s ease-in-out infinite; }
-    .animate-float-delayed { animation: float 8s ease-in-out infinite; animation-delay: 2s; }
-
-    @keyframes textShimmer {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .liquid-text {
-      background: linear-gradient(270deg, #0f172a, #0f766e, #0f172a);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: textShimmer 6s ease infinite;
-    }
-
-    .title-glow { transition: text-shadow 0.3s ease, color 0.3s ease; }
-    .title-glow:hover { color: #0f766e; text-shadow: 0 0 25px rgba(15, 118, 110, 0.25); cursor: default; }
-
-    .streak-widget { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 9999; }
-    .streak-toggle {
-      width: 56px; height: 56px; border-radius: 50%; border: none;
-      background: linear-gradient(135deg, #0f766e, #0e7490); color: #fff;
-      font-size: 1.5rem; cursor: pointer;
-      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .streak-toggle:hover { transform: scale(1.1); box-shadow: 0 6px 16px rgba(15, 118, 110, 0.6); }
-    .streak-panel {
-      position: absolute; right: 70px; top: 50%; transform: translateY(-50%);
-      width: 320px; max-height: 80vh;
-      background: #fff; border: 1px solid #e2e8f0; border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      padding: 1.25rem; overflow-y: auto;
-      opacity: 0; visibility: hidden;
-      transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
-    }
-    .streak-panel.open { opacity: 1; visibility: visible; }
-    .streak-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .streak-header h3 { font-size: 1.2rem; margin: 0; color: #0f766e; }
-    .streak-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b; line-height: 1; padding: 0 4px; }
-    .streak-close:hover { color: #0f766e; }
-    .streak-reminder { background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 1rem; font-size: 0.85rem; color: #92400e; animation: pulse 2s infinite; }
-    .streak-reminder.hidden { display: none; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-    .streak-summary { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-    .summary-badge { background: #ccfbf1; border-radius: 12px; padding: 0.3rem 0.6rem; font-size: 0.75rem; font-weight: 600; color: #0f766e; }
-    .task-list { list-style: none; margin-bottom: 1rem; }
-    .task-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem; border-radius: 10px; background: #f8fafc; margin-bottom: 0.5rem; transition: background 0.2s; }
-    .task-item:hover { background: #f0fdfa; }
-    .task-item.completed { background: #d1fae5; }
-    .task-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: #0f766e; }
-    .task-name { flex: 1; font-size: 0.9rem; }
-    .task-item.completed .task-name { text-decoration: line-through; color: #64748b; }
-    .streak-badge { background: #0f766e; color: #fff; border-radius: 12px; padding: 0.2rem 0.5rem; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
-    .streak-badge.zero { background: #94a3b8; }
-    .task-delete { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1rem; padding: 0 4px; opacity: 0; transition: opacity 0.2s; }
-    .task-item:hover .task-delete { opacity: 1; }
-    .add-task { display: flex; gap: 0.5rem; }
-    .add-task input { flex: 1; padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; background: #f8fafc; }
-    .add-task input:focus { outline: none; border-color: #0f766e; }
-    .btn-add { padding: 0.5rem 1rem; background: #0f766e; color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
-    .btn-add:hover { background: #0d9488; }
-    .countdown-section { margin-top: 1rem; text-align: center; padding: 0.75rem; background: #fef2f2; border-radius: 10px; border: 1px solid #fecaca; }
-    .countdown-section.hidden { display: none; }
-    .countdown-section.urgent { background: #dc2626; border-color: #dc2626; color: #fff; }
-    .countdown-label { font-size: 0.8rem; margin-bottom: 0.25rem; }
-    .countdown-timer { font-size: 1.5rem; font-weight: 700; font-family: monospace; }
-
-    .mobile-menu { display: none; }
-    .mobile-menu.show { display: flex; }
-    @media (max-width: 768px) {
-      .desktop-nav { display: none !important; }
-      .mobile-menu-btn { display: flex !important; }
-    }
-    @media (min-width: 769px) {
-      .mobile-menu-btn { display: none !important; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="app-wrapper" class="w-full page-load-fade">
+  <!-- Floating Cursor Glow -->
+  <div id="cursor-glow" class="cursor-glow"></div>
 
-    <!-- NAVIGATION -->
-    <nav class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-lg z-50 border-b border-slate-200/60 transition-all duration-300" data-aos="fade-down" data-aos-duration="1000">
-      <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-          <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none">
-            <path d="M4 8 Q16 4 28 8" stroke="#0f766e" stroke-width="2" fill="none" />
-            <path d="M4 16 Q16 12 28 16" stroke="#0e7490" stroke-width="2" fill="none" />
-            <path d="M4 24 Q16 20 28 24" stroke="#0f766e" stroke-width="2" fill="none" />
-            <circle cx="16" cy="16" r="3" fill="#0e7490" />
-          </svg>
-          <span class="mono text-sm font-bold text-slate-800 tracking-tight">BOOMIKA.S</span>
-        </div>
-        <div class="hidden md:flex gap-8 text-sm font-medium text-slate-500 desktop-nav">
-          <a href="#hero" class="nav-link hover:text-teal-700 transition-colors">Home</a>
-          <a href="#about" class="nav-link hover:text-teal-700 transition-colors">About</a>
-          <a href="#skills" class="nav-link hover:text-teal-700 transition-colors">Skills</a>
-          <a href="#projects" class="nav-link hover:text-teal-700 transition-colors">Projects</a>
-          <a href="#experience" class="nav-link hover:text-teal-700 transition-colors">Experience</a>
-          <a href="#contact" class="nav-link hover:text-teal-700 transition-colors">Contact</a>
-        </div>
-        <button id="hamburger" class="mobile-menu-btn flex-col gap-1.5 bg-transparent border-none cursor-pointer p-2" aria-label="Menu">
-          <span class="w-6 h-0.5 bg-slate-700 block transition-all"></span>
-          <span class="w-6 h-0.5 bg-slate-700 block transition-all"></span>
-          <span class="w-6 h-0.5 bg-slate-700 block transition-all"></span>
+  <!-- Floating Pastel Blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- NAVIGATION -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="#hero" class="flex items-center gap-2">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-lavender to-pastel-pink flex items-center justify-center text-white font-bold text-lg" style="font-family: 'Poppins', sans-serif;">B</div>
+        <span class="font-heading text-lg font-semibold text-text-dark">Boomika</span>
+      </a>
+
+      <div class="hidden lg:flex items-center gap-8 font-body text-sm text-soft-gray">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#skills" class="nav-link">Skills</a>
+        <a href="#protosem" class="nav-link">Protosem</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#featured" class="nav-link">Featured</a>
+        <a href="#timeline" class="nav-link">Journey</a>
+        <a href="#gallery" class="nav-link">Gallery</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <span class="theme-icon">☀️</span>
+        </button>
+        <button id="hamburger" class="lg:hidden hamburger-btn" aria-label="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </div>
-      <div id="mobile-menu" class="mobile-menu flex-col md:hidden bg-white border-t border-slate-100 px-6 py-4 gap-4 text-sm font-medium text-slate-600">
-        <a href="#hero" class="hover:text-teal-700 transition-colors">Home</a>
-        <a href="#about" class="hover:text-teal-700 transition-colors">About</a>
-        <a href="#skills" class="hover:text-teal-700 transition-colors">Skills</a>
-        <a href="#projects" class="hover:text-teal-700 transition-colors">Projects</a>
-        <a href="#experience" class="hover:text-teal-700 transition-colors">Experience</a>
-        <a href="#contact" class="hover:text-teal-700 transition-colors">Contact</a>
-      </div>
-    </nav>
+    </div>
 
-    <!-- HERO SECTION -->
-    <section id="hero" class="min-h-screen flex items-center justify-center fiber-pattern pt-20 relative overflow-hidden">
-      <div class="absolute top-1/4 left-10 w-32 h-32 bg-teal-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
-      <div class="absolute bottom-1/4 right-10 w-48 h-48 bg-cyan-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delayed"></div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#protosem">Protosem</a>
+      <a href="#projects">Projects</a>
+      <a href="#featured">Featured</a>
+      <a href="#timeline">Journey</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
 
-      <div class="max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center relative z-10">
-        <div data-aos="fade-up" data-aos-duration="1000">
-          <div class="mono text-xs text-teal-700 mb-4 tracking-widest font-semibold uppercase">
-            Textile Technology Student
-          </div>
-          <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight tracking-tight liquid-text pb-2">Boomika S</h1>
-          <p class="text-xl text-slate-600 mb-8 leading-relaxed max-w-lg">
-            <span class="text-slate-900 font-medium">Merchandising &amp; Quality Aspirant</span> focused on
-            <span class="text-slate-900 font-medium">sustainable textiles</span>,
-            <span class="text-slate-900 font-medium">sourcing</span>, and
-            <span class="text-slate-900 font-medium">quality excellence</span>.
-          </p>
-          <div class="flex gap-4 flex-wrap">
-            <a href="#projects" class="px-6 py-3 bg-gradient-to-r from-teal-700 to-cyan-700 text-white rounded-lg font-medium shadow-lg shadow-teal-700/20 hover:shadow-xl hover:shadow-teal-700/30 hover:-translate-y-1 transition-all duration-300">View Work</a>
-            <a href="#contact" class="px-5 py-3 border border-slate-300 text-slate-700 rounded-lg font-medium hover:border-teal-700 hover:text-teal-700 transition-all bg-white/50 backdrop-blur-sm">Contact</a>
-          </div>
+  <!-- HERO SECTION -->
+  <section id="hero" class="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 py-32 grid lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div data-aos="fade-right" data-aos-duration="1200">
+        <p class="font-quicksand text-lg text-lavender mb-3 font-semibold">✨ Welcome to my world</p>
+        <h1 class="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-text-dark mb-4 leading-tight">
+          Hi, I'm <span class="pastel-gradient-text">Boomika</span> <span class="wave">👋</span>
+        </h1>
+        <p class="font-quicksand text-xl md:text-2xl text-soft-gray mb-3 font-medium">
+          Creative Engineering Student
+        </p>
+        <p class="font-body text-lg text-soft-gray/80 mb-2">
+          Exploring Technology, Design, Innovation & Storytelling
+        </p>
+        <div class="typing-container font-body text-lg text-lavender mb-8 h-8">
+          <span id="typing-text"></span><span class="typing-cursor">|</span>
         </div>
 
-        <div class="relative -mt-12 md:-mt-24" data-aos="zoom-out" data-aos-duration="1200" data-aos-delay="200">
-          <div class="w-72 h-72 md:w-96 md:h-96 mx-auto relative group">
-            <div class="absolute inset-0 bg-gradient-to-br from-teal-100 to-cyan-100 rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-            <div class="absolute inset-4 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-2xl shadow-slate-200 border-4 border-white">
-              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full p-8">
-                <defs>
-                  <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#F6E7B4" />
-                    <stop offset="100%" stop-color="#E8B4B0" />
-                  </linearGradient>
-                </defs>
-                <circle cx="100" cy="100" r="80" fill="url(#grad)" opacity="0.6" />
-              </svg>
-            </div>
-            <div class="absolute -top-2 -right-2 bg-white/90 backdrop-blur border border-slate-100 rounded-xl shadow-lg px-4 py-2 mono text-xs text-slate-600 animate-float">
-              <span class="text-teal-600">&#9679;</span> Open to Opportunities
-            </div>
-          </div>
+        <div class="flex flex-wrap gap-4 mb-8">
+          <a href="#projects" class="btn-primary">View Projects</a>
+          <a href="#" class="btn-secondary">Download Resume</a>
+          <a href="#contact" class="btn-outline">Contact Me</a>
         </div>
-      </div>
-    </section>
 
-    <!-- ABOUT SECTION -->
-    <section id="about" class="py-20 bg-white border-t border-slate-100">
-      <div class="max-w-6xl mx-auto px-6">
-        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-right">01 / WHO I AM</div>
-        <h2 class="text-3xl font-bold text-slate-900 mb-12 title-glow inline-block" data-aos="fade-right" data-aos-delay="100">About Me</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="md:col-span-2" data-aos="fade-up" data-aos-delay="200">
-            <p class="text-lg text-slate-600 leading-relaxed mb-6">
-              Passionate Textile Technology undergraduate with hands‑on experience across spinning, weaving, garment manufacturing, and export‑house operations. I blend technical knowledge with a sustainability mindset, aiming to drive efficient sourcing and rigorous quality assurance in the fashion supply chain.
-            </p>
-          </div>
-          <div class="space-y-4" data-aos="fade-left" data-aos-delay="300">
-            <div class="bg-slate-50 rounded-lg p-5 border-l-4 border-teal-600 hover:bg-slate-100 transition-colors">
-              <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Discipline</div>
-              <div class="font-semibold text-slate-800">B.Tech Textile Technology</div>
-            </div>
-            <div class="bg-slate-50 rounded-lg p-5 border-l-4 border-cyan-600 hover:bg-slate-100 transition-colors">
-              <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Focus Area</div>
-              <div class="font-semibold text-slate-800">Merchandising &amp; Quality</div>
-            </div>
-            <div class="bg-slate-50 rounded-lg p-5 border-l-4 border-slate-600 hover:bg-slate-100 transition-colors">
-              <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Mindset</div>
-              <div class="font-semibold text-slate-800">Sustainability-Driven</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SKILLS SECTION -->
-    <section id="skills" class="py-20 bg-slate-50">
-      <div class="max-w-6xl mx-auto px-6">
-        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-up">02 / CORE COMPETENCIES</div>
-        <h2 class="text-3xl font-bold text-slate-900 mb-12 title-glow inline-block" data-aos="fade-up" data-aos-delay="100">Skills</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800">
-            <div class="w-12 h-12 bg-teal-50 rounded-lg flex items-center justify-center mb-4 text-teal-700">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 L12 6 M12 18 L12 22 M4.93 4.93 L7.76 7.76 M16.24 16.24 L19.07 19.07 M2 12 L6 12 M18 12 L22 12 M4.93 19.07 L7.76 16.24 M16.24 7.76 L19.07 4.93" /></svg>
-            </div>
-            <h3 class="font-semibold text-slate-900 mb-2">Textile Manufacturing</h3>
-            <p class="text-sm text-slate-500 mb-4">Spinning, Weaving, Fabric Testing, Garment Production</p>
-            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-11/12"></div></div>
-          </div>
-
-          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="100">
-            <div class="w-12 h-12 bg-cyan-50 rounded-lg flex items-center justify-center mb-4 text-cyan-700">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            </div>
-            <h3 class="font-semibold text-slate-900 mb-2">Quality Control</h3>
-            <p class="text-sm text-slate-500 mb-4">AQL testing, inspection, lab analysis</p>
-            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-4/5"></div></div>
-          </div>
-
-          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="200">
-            <div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center mb-4 text-slate-700">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-            </div>
-            <h3 class="font-semibold text-slate-900 mb-2">Merchandising Basics</h3>
-            <p class="text-sm text-slate-500 mb-4">Vendor coordination, order follow‑up, sample development</p>
-            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-10/12"></div></div>
-          </div>
-
-          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="300">
-            <div class="w-12 h-12 bg-teal-50 rounded-lg flex items-center justify-center mb-4 text-teal-800">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8m-4-4v4" /></svg>
-            </div>
-            <h3 class="font-semibold text-slate-900 mb-2">Design Tools</h3>
-            <p class="text-sm text-slate-500 mb-4">Adobe Photoshop, Illustrator, AutoCAD, Fusion 360</p>
-            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-9/12"></div></div>
-          </div>
-
-          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="400">
-            <div class="w-12 h-12 bg-sky-50 rounded-lg flex items-center justify-center mb-4 text-sky-700">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" /></svg>
-            </div>
-            <h3 class="font-semibold text-slate-900 mb-2">Digital &amp; Data</h3>
-            <p class="text-sm text-slate-500 mb-4">Digital marketing basics, data‑analysis fundamentals</p>
-            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-4/5"></div></div>
-          </div>
-
-          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="500">
-            <div class="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-4 text-indigo-700">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
-            </div>
-            <h3 class="font-semibold text-slate-900 mb-2">Soft Skills</h3>
-            <p class="text-sm text-slate-500 mb-4">Creative problem‑solving, data‑driven decision making</p>
-            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-3/4"></div></div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- PROJECTS SECTION -->
-    <section id="projects" class="py-20 bg-white">
-      <div class="max-w-6xl mx-auto px-6">
-        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-up">03 / INNOVATION &amp; RESEARCH</div>
-        <h2 class="text-3xl font-bold text-slate-900 mb-12 title-glow inline-block" data-aos="fade-up" data-aos-delay="100">Projects</h2>
-        <div class="grid md:grid-cols-2 gap-8">
-
-          <div class="group bg-slate-50 rounded-2xl p-8 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="0">
-            <div class="mono text-xs text-teal-700 mb-4 font-semibold">SUSTAINABILITY</div>
-            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-teal-700 transition-colors">Laser‑Based Indigo Dye Removal</h3>
-            <p class="text-slate-600 mb-6">Laser system eliminates chemicals and saves water in denim processing.</p>
-            <div class="flex flex-wrap gap-2 mb-6">
-              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Sustainability</span>
-              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Innovation</span>
-            </div>
-            <div class="flex items-center gap-4 text-sm text-slate-500">
-              <span class="text-teal-700 font-medium">&#128167; Water Conservation</span> &bull; Chemical-Free Process
-            </div>
-          </div>
-
-          <div class="group bg-slate-50 rounded-2xl p-8 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="100">
-            <div class="mono text-xs text-teal-700 mb-4 font-semibold">RENEWABLE ENERGY</div>
-            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-teal-700 transition-colors">Solar Pirn Winding Machine</h3>
-            <p class="text-slate-600 mb-6">Solar‑powered winding reduces energy costs for rural handloom weavers.</p>
-            <div class="flex flex-wrap gap-2 mb-6">
-              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Energy</span>
-              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Innovation</span>
-            </div>
-            <div class="flex items-center gap-4 text-sm text-slate-500">
-              <span class="text-teal-700 font-medium">&#9728; Solar Powered</span> &bull; Rural Impact
-            </div>
-          </div>
-
-          <div class="group bg-slate-50 rounded-2xl p-8 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="200">
-            <div class="mono text-xs text-teal-700 mb-4 font-semibold">SOCIAL IMPACT</div>
-            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-teal-700 transition-colors">Biodegradable Sanitary Napkins</h3>
-            <p class="text-slate-600 mb-6">Eco‑friendly sanitary product using natural textile fibers.</p>
-            <div class="flex flex-wrap gap-2 mb-6">
-              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Social</span>
-              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Sustainability</span>
-            </div>
-            <div class="flex items-center gap-4 text-sm text-slate-500">
-              <span class="text-teal-700 font-medium">&#127793; Eco-Friendly</span> &bull; Natural Fibers
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- EXPERIENCE SECTION -->
-    <section id="experience" class="py-20 bg-slate-50">
-      <div class="max-w-6xl mx-auto px-6">
-        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-right">04 / INDUSTRY EXPOSURE</div>
-        <h2 class="text-3xl font-bold text-slate-900 mb-12 title-glow inline-block" data-aos="fade-right" data-aos-delay="100">Experience</h2>
-        <div class="space-y-6">
-
-          <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="0">
-            <div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">&#127754;</div>
-            <div class="flex-grow">
-              <h3 class="text-lg font-bold text-slate-900 mb-2">Santhosh Spinning Mills</h3>
-              <p class="text-slate-600 text-sm">Production &amp; QC exposure – yarn spinning, quality checkpoints.</p>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="100">
-            <div class="w-16 h-16 bg-cyan-50 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">&#128087;</div>
-            <div class="flex-grow">
-              <h3 class="text-lg font-bold text-slate-900 mb-2">Praveen Tex</h3>
-              <p class="text-slate-600 text-sm">Garment manufacturing &amp; printing – stitching, in‑line QC.</p>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="200">
-            <div class="w-16 h-16 bg-slate-50 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">&#127760;</div>
-            <div class="flex-grow">
-              <h3 class="text-lg font-bold text-slate-900 mb-2">Eastman Exports</h3>
-              <p class="text-slate-600 text-sm">Export‑oriented production – buyer specs, documentation.</p>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="300">
-            <div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">&#128085;</div>
-            <div class="flex-grow">
-              <h3 class="text-lg font-bold text-slate-900 mb-2">Value Fashion</h3>
-              <p class="text-slate-600 text-sm">Fast‑fashion cycles – fabric inspection, costing basics.</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ACHIEVEMENTS SECTION -->
-    <section id="achievements" class="py-20 bg-white">
-      <div class="max-w-6xl mx-auto px-6">
-        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-up">05 / RECOGNITION</div>
-        <h2 class="text-3xl font-bold text-slate-900 mb-12 title-glow inline-block" data-aos="fade-up" data-aos-delay="100">Achievements</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-
-          <div class="border border-slate-200 rounded-xl p-6 hover:border-teal-500 transition-colors bg-slate-50 group hover:-translate-y-2 duration-300" data-aos="fade-up" data-aos-delay="0">
-            <div class="flex items-start justify-between mb-4">
-              <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-slate-200 text-teal-600 group-hover:scale-110 transition-transform">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-              </div>
-            </div>
-            <h3 class="font-semibold text-slate-900 mb-1">Handloom Hackathon Finalist</h3>
-            <p class="text-sm text-slate-500">IIT Delhi</p>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl p-6 hover:border-cyan-500 transition-colors bg-slate-50 group hover:-translate-y-2 duration-300" data-aos="fade-up" data-aos-delay="100">
-            <div class="flex items-start justify-between mb-4">
-              <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-slate-200 text-cyan-600 group-hover:scale-110 transition-transform">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-              </div>
-            </div>
-            <h3 class="font-semibold text-slate-900 mb-1">Poster Exhibition Winner</h3>
-            <p class="text-sm text-slate-500">Sustainable Textile Research</p>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl p-6 hover:border-teal-600 transition-colors bg-slate-50 group hover:-translate-y-2 duration-300" data-aos="fade-up" data-aos-delay="200">
-            <div class="flex items-start justify-between mb-4">
-              <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-slate-200 text-teal-700 group-hover:scale-110 transition-transform">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-              </div>
-            </div>
-            <h3 class="font-semibold text-slate-900 mb-1">Academic Achiever Award</h3>
-            <p class="text-sm text-slate-500">B.Tech Textile Technology</p>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT SECTION -->
-    <section id="contact" class="py-20 bg-slate-50 border-t border-slate-200">
-      <div class="max-w-6xl mx-auto px-6">
-        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-up">06 / GET IN TOUCH</div>
-        <h2 class="text-3xl font-bold text-slate-900 mb-4 title-glow inline-block" data-aos="fade-up" data-aos-delay="100">Contact</h2>
-        <p class="text-slate-600 mb-12 max-w-xl" data-aos="fade-up" data-aos-delay="150">Feel free to reach out for collaborations, opportunities, or just a conversation about textiles and sustainability.</p>
-        <div class="grid md:grid-cols-3 gap-6">
-
-          <a href="mailto:boomika@email.com" class="flex items-center gap-4 p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow card-hover" data-aos="fade-right" data-aos-delay="200" id="contact-email">
-            <div class="w-12 h-12 bg-teal-50 rounded-lg flex items-center justify-center text-teal-700">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-            </div>
-            <div>
-              <div class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Email</div>
-              <div class="font-medium text-slate-900">boomika@email.com</div>
-            </div>
+        <div class="flex items-center gap-5">
+          <a href="#" class="social-icon" aria-label="GitHub">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           </a>
-
-          <a href="tel:+919999999999" class="flex items-center gap-4 p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow card-hover" data-aos="fade-right" data-aos-delay="300" id="contact-phone">
-            <div class="w-12 h-12 bg-cyan-50 rounded-lg flex items-center justify-center text-cyan-700">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
-            </div>
-            <div>
-              <div class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Phone</div>
-              <div class="font-medium text-slate-900">+91 99999 99999</div>
-            </div>
+          <a href="#" class="social-icon" aria-label="LinkedIn">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </a>
-
-          <a href="https://linkedin.com/in/boomika-s" target="_blank" class="flex items-center gap-4 p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow card-hover" data-aos="fade-right" data-aos-delay="400" id="contact-linkedin">
-            <div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center text-slate-700">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
-            </div>
-            <div>
-              <div class="text-xs text-slate-400 uppercase tracking-wide font-semibold">LinkedIn</div>
-              <div class="font-medium text-teal-700">linkedin.com/in/boomika-s</div>
-            </div>
+          <a href="mailto:boomika@example.com" class="social-icon" aria-label="Email">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </a>
-
         </div>
       </div>
-    </section>
 
-    <!-- FOOTER -->
-    <footer class="py-8 bg-white border-t border-slate-200 text-slate-500">
-      <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div class="flex items-center gap-2">
-          <svg class="w-6 h-6 text-teal-700" viewBox="0 0 32 32" fill="none">
-            <path d="M4 8 Q16 4 28 8" stroke="currentColor" stroke-width="2" fill="none" />
-            <path d="M4 16 Q16 12 28 16" stroke="currentColor" stroke-width="2" fill="none" />
-            <path d="M4 24 Q16 20 28 24" stroke="currentColor" stroke-width="2" fill="none" />
-          </svg>
-          <span class="mono text-sm font-bold text-slate-900">&copy; 2024 Boomika S</span>
-        </div>
-        <div class="mono text-xs">Textile Technology Undergraduate &bull; Merchandising &amp; Quality Specialist</div>
-      </div>
-    </footer>
-
-    <!-- STREAK WIDGET -->
-    <div id="streak-widget" class="streak-widget">
-      <button id="streak-toggle" class="streak-toggle" aria-label="Toggle Streak Tracker">
-        <span class="fire-icon">&#128293;</span>
-      </button>
-      <div id="streak-panel" class="streak-panel">
-        <div class="streak-header">
-          <h3>&#128293; Streak Tracker</h3>
-          <button id="streak-close" class="streak-close" aria-label="Close">&times;</button>
-        </div>
-        <div id="streak-reminder" class="streak-reminder hidden">
-          <p>&#9888;&#65039; You have incomplete tasks today!</p>
-        </div>
-        <div id="streak-summary" class="streak-summary"></div>
-        <ul id="task-list" class="task-list"></ul>
-        <div class="add-task">
-          <input type="text" id="new-task-input" placeholder="Add a new task..." maxlength="50" />
-          <button id="add-task-btn" class="btn-add">Add</button>
-        </div>
-        <div id="countdown-section" class="countdown-section hidden">
-          <p class="countdown-label">Day ends in</p>
-          <p id="countdown-timer" class="countdown-timer"></p>
+      <div class="flex justify-center" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
+        <div class="profile-container">
+          <div class="profile-ring"></div>
+          <div class="profile-image">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+              <defs>
+                <linearGradient id="avatarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#C8B6FF" />
+                  <stop offset="50%" stop-color="#B8E0FF" />
+                  <stop offset="100%" stop-color="#FFD6E8" />
+                </linearGradient>
+              </defs>
+              <circle cx="100" cy="100" r="100" fill="url(#avatarGrad)" />
+              <circle cx="100" cy="80" r="35" fill="#fff" opacity="0.8" />
+              <ellipse cx="100" cy="160" rx="55" ry="40" fill="#fff" opacity="0.8" />
+              <text x="100" y="108" text-anchor="middle" font-family="Poppins, sans-serif" font-size="28" font-weight="700" fill="#4A4453">B</text>
+            </svg>
+          </div>
+          <div class="profile-badge badge-1">🎨 Creative</div>
+          <div class="profile-badge badge-2">💡 Innovator</div>
+          <div class="profile-badge badge-3">🚀 Builder</div>
         </div>
       </div>
     </div>
 
-  </div>
+    <div class="scroll-indicator">
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
+      </div>
+      <span class="font-body text-xs text-soft-gray/60">Scroll Down</span>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section id="about" class="section-padding relative">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <span class="section-label">✨ Get to know me</span>
+        <h2 class="section-heading">About Me</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-12 items-start">
+        <div class="glass-card p-8 md:p-10" data-aos="fade-right" data-aos-duration="1000">
+          <p class="font-body text-lg text-soft-gray leading-relaxed mb-6">
+            I am a creative engineering student passionate about technology, innovation, sustainability, design, and problem-solving. I enjoy exploring web development, IoT, embedded systems, UI/UX design, prototyping, and digital creativity.
+          </p>
+          <p class="font-body text-base text-soft-gray/80 leading-relaxed">
+            My journey is driven by curiosity and the desire to build things that matter. From coding web apps to designing circuits, from crafting UI mockups to exploring data science - I love every moment of learning and creating.
+          </p>
+        </div>
+
+        <div class="space-y-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+          <div class="glass-card p-6 hover-card">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-lavender/20 flex items-center justify-center text-xl flex-shrink-0">🎓</div>
+              <div>
+                <h3 class="font-heading font-semibold text-text-dark mb-1">Education</h3>
+                <p class="font-body text-sm text-soft-gray">Engineering Student | Exploring Technology & Design</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-6 hover-card">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-pastel-blue/20 flex items-center justify-center text-xl flex-shrink-0">💡</div>
+              <div>
+                <h3 class="font-heading font-semibold text-text-dark mb-1">Interests</h3>
+                <p class="font-body text-sm text-soft-gray">Web Development, IoT, UI/UX, Data Science, Embedded Systems</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-6 hover-card">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-pastel-pink/20 flex items-center justify-center text-xl flex-shrink-0">🎯</div>
+              <div>
+                <h3 class="font-heading font-semibold text-text-dark mb-1">Career Goals</h3>
+                <p class="font-body text-sm text-soft-gray">Build innovative tech solutions that make a positive impact</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-6 hover-card">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-lavender/20 flex items-center justify-center text-xl flex-shrink-0">🎨</div>
+              <div>
+                <h3 class="font-heading font-semibold text-text-dark mb-1">Creative Hobbies</h3>
+                <p class="font-body text-sm text-soft-gray">Digital Art, Design, Photography, Storytelling, Prototyping</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS SECTION -->
+  <section id="skills" class="section-padding bg-pastel-gradient-subtle relative">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <span class="section-label">🛠️ What I Work With</span>
+        <h2 class="section-heading">Skills & Tools</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="0">
+          <div class="skill-icon">🌐</div>
+          <h3 class="skill-name">HTML</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90"></div></div>
+          <span class="skill-percent">90%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="50">
+          <div class="skill-icon">🎨</div>
+          <h3 class="skill-name">CSS</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85"></div></div>
+          <span class="skill-percent">85%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="100">
+          <div class="skill-icon">⚡</div>
+          <h3 class="skill-name">JavaScript</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="75"></div></div>
+          <span class="skill-percent">75%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="150">
+          <div class="skill-icon">🐍</div>
+          <h3 class="skill-name">Python</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80"></div></div>
+          <span class="skill-percent">80%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="200">
+          <div class="skill-icon">🌿</div>
+          <h3 class="skill-name">Django</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="70"></div></div>
+          <span class="skill-percent">70%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="250">
+          <div class="skill-icon">🔌</div>
+          <h3 class="skill-name">Arduino</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="75"></div></div>
+          <span class="skill-percent">75%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="300">
+          <div class="skill-icon">📡</div>
+          <h3 class="skill-name">IoT</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="70"></div></div>
+          <span class="skill-percent">70%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="350">
+          <div class="skill-icon">🔧</div>
+          <h3 class="skill-name">Fusion 360</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="65"></div></div>
+          <span class="skill-percent">65%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="400">
+          <div class="skill-icon">🎭</div>
+          <h3 class="skill-name">Figma</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80"></div></div>
+          <span class="skill-percent">80%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="450">
+          <div class="skill-icon">🖼️</div>
+          <h3 class="skill-name">Canva</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90"></div></div>
+          <span class="skill-percent">90%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="500">
+          <div class="skill-icon">📸</div>
+          <h3 class="skill-name">Photoshop</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="70"></div></div>
+          <span class="skill-percent">70%</span>
+        </div>
+
+        <div class="skill-card" data-aos="zoom-in" data-aos-delay="550">
+          <div class="skill-icon">📊</div>
+          <h3 class="skill-name">Data Science</h3>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="65"></div></div>
+          <span class="skill-percent">65%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROTOSEM SECTION -->
+  <section id="protosem" class="section-padding relative">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <span class="section-label">📚 Learning Explorations</span>
+        <h2 class="section-heading">Protosem Explorations</h2>
+        <div class="section-line"></div>
+        <p class="font-body text-soft-gray max-w-2xl mx-auto mt-4">A collection of tools, platforms, and technologies I've explored during my protosem journey.</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div class="protosem-card" data-aos="fade-up" data-aos-delay="0">
+          <div class="protosem-icon">🐱</div>
+          <h3 class="protosem-name">Scratch Programming</h3>
+          <p class="protosem-desc">Visual block-based coding for beginners</p>
+        </div>
+
+        <div class="protosem-card" data-aos="fade-up" data-aos-delay="50">
+          <div class="protosem-icon">📱</div>
+          <h3 class="protosem-name">MIT App Inventor</h3>
+          <p class="protosem-desc">Build Android apps with drag-and-drop</p>
+        </div>
+
+        <div class="protosem-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="protosem-icon">🧠</div>
+          <h3 class="protosem-name">System Thinking</h3>
+          <p class="protosem-desc">Understanding complex interconnected systems</p>
+        </div>
+
+        <div class="protosem-card" data-aos="fade-up" data-aos-delay="150">
+          <div class="protosem-icon">🎨</div>
+          <h3 class="protosem-name">Tinkercad</h3>
+          <p class="protosem-desc">3D design and electronics simulation</p>
+        </div>
+
+        <div class="protosem-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="protosem-icon">🖨️</div>
+          <h3 class="protosem-name">3D Printing</h3>
+          <p class="protosem-desc">Turning digital models into physical objects</p>
+        </div>
+
+        <div class="protosem-card" data-aos="fade-up" data-aos-delay="250">
+          <div class="protosem-icon">✂️</div>
+          <h3 class="protosem-name">Laser Cutting</h3>
+          <p class="protosem-desc">Precision cutting for prototyping</p>
+        </div>
+
+        <div class="protosem-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="protosem-icon">🔧</div>
+          <h3 class="protosem-name">Fusion 360</h3>
+          <p class="protosem-desc">Professional 3D CAD/CAM design tool</p>
+        </div>
+
+        <div class="protosem-card" data-aos="fade-up" data-aos-delay="350">
+          <div class="protosem-icon">🌿</div>
+          <h3 class="protosem-name">Django App Dev</h3>
+          <p class="protosem-desc">Full-stack web apps with Python & Django</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS SECTION -->
+  <section id="projects" class="section-padding bg-pastel-gradient-subtle relative">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <span class="section-label">🚀 Things I've Built</span>
+        <h2 class="section-heading">Projects</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="project-card" data-aos="fade-up" data-aos-delay="0">
+          <div class="project-image">
+            <div class="project-placeholder">🧤</div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">MultiSense Glove</h3>
+            <p class="project-desc">A wearable assistive device for gesture-based communication and smart interaction.</p>
+            <div class="project-tags">
+              <span class="tag">Arduino</span>
+              <span class="tag">Sensors</span>
+              <span class="tag">IoT</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="btn-project">GitHub</a>
+              <a href="#" class="btn-project btn-project-accent">Demo</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="project-image">
+            <div class="project-placeholder">💧</div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Smart Irrigation System</h3>
+            <p class="project-desc">Automated irrigation using soil moisture sensors and weather data for efficient water usage.</p>
+            <div class="project-tags">
+              <span class="tag">IoT</span>
+              <span class="tag">Arduino</span>
+              <span class="tag">Sensors</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="btn-project">GitHub</a>
+              <a href="#" class="btn-project btn-project-accent">Demo</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="project-image">
+            <div class="project-placeholder">🌿</div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Django Applications</h3>
+            <p class="project-desc">Full-stack web applications built with Python Django framework and modern UI.</p>
+            <div class="project-tags">
+              <span class="tag">Python</span>
+              <span class="tag">Django</span>
+              <span class="tag">Web</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="btn-project">GitHub</a>
+              <a href="#" class="btn-project btn-project-accent">Demo</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="project-image">
+            <div class="project-placeholder">📡</div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">IoT Projects</h3>
+            <p class="project-desc">Connected device projects integrating sensors, microcontrollers, and cloud platforms.</p>
+            <div class="project-tags">
+              <span class="tag">IoT</span>
+              <span class="tag">ESP32</span>
+              <span class="tag">Cloud</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="btn-project">GitHub</a>
+              <a href="#" class="btn-project btn-project-accent">Demo</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-aos="fade-up" data-aos-delay="400">
+          <div class="project-image">
+            <div class="project-placeholder">🌱</div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Sustainable Tech Projects</h3>
+            <p class="project-desc">Technology solutions focused on sustainability, energy efficiency, and environmental impact.</p>
+            <div class="project-tags">
+              <span class="tag">Green Tech</span>
+              <span class="tag">IoT</span>
+              <span class="tag">Design</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="btn-project">GitHub</a>
+              <a href="#" class="btn-project btn-project-accent">Demo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PROJECT: MultiSense Glove -->
+  <section id="featured" class="section-padding relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <span class="section-label">⭐ Spotlight Project</span>
+        <h2 class="section-heading">MultiSense Glove</h2>
+        <div class="section-line"></div>
+        <p class="font-quicksand text-xl text-lavender font-semibold mt-4">Wearable Intelligence for Assistive Communication</p>
+      </div>
+
+      <div class="featured-wrapper">
+        <div class="featured-images" data-aos="fade-right" data-aos-duration="1000">
+          <div class="featured-img-main">
+            <div class="featured-placeholder">🧤</div>
+          </div>
+          <div class="featured-img-grid">
+            <div class="featured-img-sm"><div class="featured-placeholder-sm">📡</div></div>
+            <div class="featured-img-sm"><div class="featured-placeholder-sm">🔌</div></div>
+            <div class="featured-img-sm"><div class="featured-placeholder-sm">💡</div></div>
+          </div>
+        </div>
+
+        <div class="featured-content" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+          <div class="glass-card p-8 mb-6">
+            <h3 class="font-heading text-xl font-semibold text-text-dark mb-3">🎯 Problem Statement</h3>
+            <p class="font-body text-soft-gray leading-relaxed">Many individuals with speech or motor impairments face challenges in daily communication. Traditional assistive devices are often bulky, expensive, or limited in functionality.</p>
+          </div>
+
+          <div class="glass-card p-8 mb-6">
+            <h3 class="font-heading text-xl font-semibold text-text-dark mb-3">💡 Solution</h3>
+            <p class="font-body text-soft-gray leading-relaxed">The MultiSense Glove is a lightweight wearable that detects hand gestures in real-time and translates them into meaningful communication outputs, enabling seamless interaction for users with speech or motor challenges.</p>
+          </div>
+
+          <div class="glass-card p-8 mb-6">
+            <h3 class="font-heading text-xl font-semibold text-text-dark mb-3">✨ Features</h3>
+            <ul class="feature-list">
+              <li>Real-time gesture detection</li>
+              <li>Smart wearable interaction</li>
+              <li>Sensor integration (flex, accelerometer, gyroscope)</li>
+              <li>Lightweight and ergonomic design</li>
+            </ul>
+          </div>
+
+          <div class="glass-card p-8 mb-6">
+            <h3 class="font-heading text-xl font-semibold text-text-dark mb-3">🛠️ Technologies Used</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="tag tag-lavender">Arduino</span>
+              <span class="tag tag-blue">Sensors</span>
+              <span class="tag tag-pink">IoT</span>
+              <span class="tag tag-lavender">Embedded Systems</span>
+              <span class="tag tag-blue">Gesture Recognition</span>
+            </div>
+          </div>
+
+          <div class="glass-card p-8">
+            <h3 class="font-heading text-xl font-semibold text-text-dark mb-3">🔮 Future Scope</h3>
+            <ul class="feature-list">
+              <li>AI-powered gesture recognition</li>
+              <li>Smart home integration</li>
+              <li>Sign language translation support</li>
+            </ul>
+          </div>
+
+          <div class="glass-card p-6 mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p class="font-body text-xs text-soft-gray uppercase tracking-wide">Timeline</p>
+              <p class="font-heading font-semibold text-text-dark">2024 - Ongoing</p>
+            </div>
+            <div class="flex gap-3">
+              <a href="#" class="btn-project">View on GitHub</a>
+              <a href="#" class="btn-project btn-project-accent">Live Demo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS SECTION -->
+  <section id="certifications" class="section-padding bg-pastel-gradient-subtle relative">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <span class="section-label">🏆 Credentials</span>
+        <h2 class="section-heading">Certifications</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="cert-slider-wrapper" data-aos="fade-up" data-aos-delay="200">
+        <div class="cert-slider" id="cert-slider">
+          <div class="cert-card">
+            <div class="cert-icon">🎓</div>
+            <h3 class="cert-title">Workshop: IoT Fundamentals</h3>
+            <p class="cert-org">Technical Workshop Series</p>
+            <span class="cert-year">2024</span>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-icon">💼</div>
+            <h3 class="cert-title">Internship: Web Development</h3>
+            <p class="cert-org">Tech Company Internship</p>
+            <span class="cert-year">2024</span>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-icon">📜</div>
+            <h3 class="cert-title">Python Programming</h3>
+            <p class="cert-org">Technical Certification</p>
+            <span class="cert-year">2024</span>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-icon">🎨</div>
+            <h3 class="cert-title">UI/UX Design Fundamentals</h3>
+            <p class="cert-org">Design Certification</p>
+            <span class="cert-year">2024</span>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-icon">🤖</div>
+            <h3 class="cert-title">Arduino & Embedded Systems</h3>
+            <p class="cert-org">Technical Workshop</p>
+            <span class="cert-year">2023</span>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-icon">📊</div>
+            <h3 class="cert-title">Data Science Basics</h3>
+            <p class="cert-org">Online Certification</p>
+            <span class="cert-year">2023</span>
+          </div>
+        </div>
+        <div class="cert-controls">
+          <button id="cert-prev" class="cert-btn" aria-label="Previous">&#8592;</button>
+          <button id="cert-next" class="cert-btn" aria-label="Next">&#8594;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE SECTION -->
+  <section id="timeline" class="section-padding relative">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <span class="section-label">🗺️ My Path</span>
+        <h2 class="section-heading">My Journey</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item" data-aos="fade-up" data-aos-delay="0">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card p-6">
+            <span class="timeline-date">2022</span>
+            <h3 class="timeline-title">Started Engineering Journey</h3>
+            <p class="timeline-desc">Began my adventure in engineering, discovering the world of technology, circuits, and code.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card p-6">
+            <span class="timeline-date">2023</span>
+            <h3 class="timeline-title">Learned Design & Technology</h3>
+            <p class="timeline-desc">Explored Figma, Fusion 360, and web technologies. Started creating digital designs and prototypes.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card p-6">
+            <span class="timeline-date">2023</span>
+            <h3 class="timeline-title">Built First Projects</h3>
+            <p class="timeline-desc">Developed IoT projects, web applications, and sensor-based prototypes. Hands-on learning began.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item" data-aos="fade-up" data-aos-delay="300">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card p-6">
+            <span class="timeline-date">2024</span>
+            <h3 class="timeline-title">Explored Prototyping</h3>
+            <p class="timeline-desc">Dived into 3D printing, laser cutting, Tinkercad, and rapid prototyping techniques.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item" data-aos="fade-up" data-aos-delay="400">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card p-6">
+            <span class="timeline-date">2025</span>
+            <h3 class="timeline-title">Developed Creative Portfolio</h3>
+            <p class="timeline-desc">Combined engineering skills with creative design to build a unique personal brand and portfolio.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS SECTION -->
+  <section id="achievements" class="section-padding bg-pastel-gradient-subtle relative">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <span class="section-label">📈 By the Numbers</span>
+        <h2 class="section-heading">Achievements</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="achievement-card" data-aos="zoom-in" data-aos-delay="0">
+          <div class="achievement-icon">🚀</div>
+          <div class="achievement-number" data-target="15">0</div>
+          <p class="achievement-label">Projects Completed</p>
+        </div>
+
+        <div class="achievement-card" data-aos="zoom-in" data-aos-delay="100">
+          <div class="achievement-icon">🏅</div>
+          <div class="achievement-number" data-target="8">0</div>
+          <p class="achievement-label">Certifications</p>
+        </div>
+
+        <div class="achievement-card" data-aos="zoom-in" data-aos-delay="200">
+          <div class="achievement-icon">🎓</div>
+          <div class="achievement-number" data-target="12">0</div>
+          <p class="achievement-label">Workshops</p>
+        </div>
+
+        <div class="achievement-card" data-aos="zoom-in" data-aos-delay="300">
+          <div class="achievement-icon">💡</div>
+          <div class="achievement-number" data-target="20">0</div>
+          <p class="achievement-label">Skills Learned</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY SECTION -->
+  <section id="gallery" class="section-padding relative">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <span class="section-label">📸 Moments & Creations</span>
+        <h2 class="section-heading">Gallery</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="gallery-grid" data-aos="fade-up" data-aos-delay="200">
+        <div class="gallery-item gallery-tall">
+          <div class="gallery-placeholder">🎨<br/>Design Work</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">🔧<br/>Prototype</div>
+        </div>
+        <div class="gallery-item gallery-wide">
+          <div class="gallery-placeholder">📡<br/>IoT Setup</div>
+        </div>
+        <div class="gallery-item gallery-tall">
+          <div class="gallery-placeholder">🖥️<br/>Coding Session</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">🎓<br/>Workshop</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">🌱<br/>Green Tech</div>
+        </div>
+        <div class="gallery-item gallery-wide">
+          <div class="gallery-placeholder">🧤<br/>MultiSense Glove</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">📸<br/>Creative Work</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="section-padding bg-pastel-gradient-subtle relative">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <span class="section-label">💌 Let's Connect</span>
+        <h2 class="section-heading">Get in Touch</h2>
+        <div class="section-line"></div>
+        <p class="font-body text-soft-gray max-w-xl mx-auto mt-4">Have a project idea, collaboration opportunity, or just want to say hi? I'd love to hear from you!</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-12">
+        <div class="glass-card p-8 md:p-10" data-aos="fade-right" data-aos-duration="1000">
+          <form id="contact-form" class="space-y-6">
+            <div>
+              <label for="name" class="form-label">Name</label>
+              <input type="text" id="name" name="name" class="form-input" placeholder="Your name" required />
+            </div>
+            <div>
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required />
+            </div>
+            <div>
+              <label for="message" class="form-label">Message</label>
+              <textarea id="message" name="message" rows="5" class="form-input form-textarea" placeholder="Tell me about your idea..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary w-full">Send Message ✨</button>
+          </form>
+        </div>
+
+        <div class="space-y-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+          <div class="glass-card p-6 hover-card">
+            <a href="#" class="contact-link">
+              <div class="contact-icon">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              </div>
+              <div>
+                <h3 class="font-heading font-semibold text-text-dark">GitHub</h3>
+                <p class="font-body text-sm text-soft-gray">github.com/boomika</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="glass-card p-6 hover-card">
+            <a href="#" class="contact-link">
+              <div class="contact-icon">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </div>
+              <div>
+                <h3 class="font-heading font-semibold text-text-dark">LinkedIn</h3>
+                <p class="font-body text-sm text-soft-gray">linkedin.com/in/boomika</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="glass-card p-6 hover-card">
+            <a href="mailto:boomika@example.com" class="contact-link">
+              <div class="contact-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div>
+                <h3 class="font-heading font-semibold text-text-dark">Email</h3>
+                <p class="font-body text-sm text-soft-gray">boomika@example.com</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="glass-card p-6 hover-card">
+            <a href="#" class="contact-link">
+              <div class="contact-icon">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              </div>
+              <div>
+                <h3 class="font-heading font-semibold text-text-dark">WhatsApp</h3>
+                <p class="font-body text-sm text-soft-gray">Message me directly</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 border-t border-lavender/20">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <div class="flex items-center justify-center gap-2 mb-4">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-lavender to-pastel-pink flex items-center justify-center text-white font-bold text-sm" style="font-family: 'Poppins', sans-serif;">B</div>
+        <span class="font-heading font-semibold text-text-dark">Boomika</span>
+      </div>
+      <p class="font-quicksand text-soft-gray text-sm">Designed with creativity by Boomika 💖</p>
+      <p class="font-body text-xs text-soft-gray/60 mt-2">&copy; 2025 All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button id="scroll-top" class="scroll-top-btn" aria-label="Scroll to top">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg>
+  </button>
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="script.js"></script>
