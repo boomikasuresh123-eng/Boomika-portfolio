@@ -1,249 +1,534 @@
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Boomika S | Textile Portfolio</title>
-  <meta name="description"
-    content="Portfolio of Boomika S – Textile Technology undergraduate focused on merchandising, fabric sourcing, and quality control." />
-  <!-- Google Fonts: Playfair Display for headings, Poppins for body -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Portfolio of Boomika S – Textile Technology undergraduate focused on merchandising, fabric sourcing, and quality control." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'DM Sans', sans-serif;
+      background-color: #f8fafc;
+      color: #334155;
+      overflow-x: hidden;
+    }
+    .mono { font-family: 'Space Mono', monospace; }
+
+    .card-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -10px rgba(15, 118, 110, 0.15);
+      border-color: #99f6e4;
+    }
+
+    .fiber-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0 Q45 15 30 30 Q15 45 30 60' stroke='%230f766e' stroke-opacity='0.04' fill='none' stroke-width='1'/%3E%3Cpath d='M0 30 Q15 15 30 30 Q45 45 60 30' stroke='%23334155' stroke-opacity='0.04' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+      background-attachment: fixed;
+    }
+
+    .nav-link { position: relative; }
+    .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, #0f766e, #0e7490); transition: width 0.3s ease; }
+    .nav-link:hover::after { width: 100%; }
+
+    .skill-bar { background: linear-gradient(90deg, #0f766e, #0e7490); border-radius: 4px; height: 6px; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .page-load-fade { animation: fadeInUp 1s ease-out forwards; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .animate-float-delayed { animation: float 8s ease-in-out infinite; animation-delay: 2s; }
+
+    @keyframes textShimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .liquid-text {
+      background: linear-gradient(270deg, #0f172a, #0f766e, #0f172a);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textShimmer 6s ease infinite;
+    }
+
+    .title-glow { transition: text-shadow 0.3s ease, color 0.3s ease; }
+    .title-glow:hover { color: #0f766e; text-shadow: 0 0 25px rgba(15, 118, 110, 0.25); cursor: default; }
+
+    .streak-widget { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 9999; }
+    .streak-toggle {
+      width: 56px; height: 56px; border-radius: 50%; border: none;
+      background: linear-gradient(135deg, #0f766e, #0e7490); color: #fff;
+      font-size: 1.5rem; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .streak-toggle:hover { transform: scale(1.1); box-shadow: 0 6px 16px rgba(15, 118, 110, 0.6); }
+    .streak-panel {
+      position: absolute; right: 70px; top: 50%; transform: translateY(-50%);
+      width: 320px; max-height: 80vh;
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      padding: 1.25rem; overflow-y: auto;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+    }
+    .streak-panel.open { opacity: 1; visibility: visible; }
+    .streak-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .streak-header h3 { font-size: 1.2rem; margin: 0; color: #0f766e; }
+    .streak-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b; line-height: 1; padding: 0 4px; }
+    .streak-close:hover { color: #0f766e; }
+    .streak-reminder { background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 1rem; font-size: 0.85rem; color: #92400e; animation: pulse 2s infinite; }
+    .streak-reminder.hidden { display: none; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    .streak-summary { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .summary-badge { background: #ccfbf1; border-radius: 12px; padding: 0.3rem 0.6rem; font-size: 0.75rem; font-weight: 600; color: #0f766e; }
+    .task-list { list-style: none; margin-bottom: 1rem; }
+    .task-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem; border-radius: 10px; background: #f8fafc; margin-bottom: 0.5rem; transition: background 0.2s; }
+    .task-item:hover { background: #f0fdfa; }
+    .task-item.completed { background: #d1fae5; }
+    .task-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: #0f766e; }
+    .task-name { flex: 1; font-size: 0.9rem; }
+    .task-item.completed .task-name { text-decoration: line-through; color: #64748b; }
+    .streak-badge { background: #0f766e; color: #fff; border-radius: 12px; padding: 0.2rem 0.5rem; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+    .streak-badge.zero { background: #94a3b8; }
+    .task-delete { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1rem; padding: 0 4px; opacity: 0; transition: opacity 0.2s; }
+    .task-item:hover .task-delete { opacity: 1; }
+    .add-task { display: flex; gap: 0.5rem; }
+    .add-task input { flex: 1; padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; background: #f8fafc; }
+    .add-task input:focus { outline: none; border-color: #0f766e; }
+    .btn-add { padding: 0.5rem 1rem; background: #0f766e; color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
+    .btn-add:hover { background: #0d9488; }
+    .countdown-section { margin-top: 1rem; text-align: center; padding: 0.75rem; background: #fef2f2; border-radius: 10px; border: 1px solid #fecaca; }
+    .countdown-section.hidden { display: none; }
+    .countdown-section.urgent { background: #dc2626; border-color: #dc2626; color: #fff; }
+    .countdown-label { font-size: 0.8rem; margin-bottom: 0.25rem; }
+    .countdown-timer { font-size: 1.5rem; font-weight: 700; font-family: monospace; }
+
+    .mobile-menu { display: none; }
+    .mobile-menu.show { display: flex; }
+    @media (max-width: 768px) {
+      .desktop-nav { display: none !important; }
+      .mobile-menu-btn { display: flex !important; }
+    }
+    @media (min-width: 769px) {
+      .mobile-menu-btn { display: none !important; }
+    }
+  </style>
 </head>
-
 <body>
-  <!-- NAVIGATION -->
-  <nav id="navbar" class="navbar">
-    <div class="nav-inner">
-      <a href="#hero" class="nav-logo">Boomika S</a>
-      <ul class="nav-links">
-        <li><a href="#hero">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
-        <span></span><span></span><span></span>
+  <div id="app-wrapper" class="w-full page-load-fade">
+
+    <!-- NAVIGATION -->
+    <nav class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-lg z-50 border-b border-slate-200/60 transition-all duration-300" data-aos="fade-down" data-aos-duration="1000">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none">
+            <path d="M4 8 Q16 4 28 8" stroke="#0f766e" stroke-width="2" fill="none" />
+            <path d="M4 16 Q16 12 28 16" stroke="#0e7490" stroke-width="2" fill="none" />
+            <path d="M4 24 Q16 20 28 24" stroke="#0f766e" stroke-width="2" fill="none" />
+            <circle cx="16" cy="16" r="3" fill="#0e7490" />
+          </svg>
+          <span class="mono text-sm font-bold text-slate-800 tracking-tight">BOOMIKA.S</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-sm font-medium text-slate-500 desktop-nav">
+          <a href="#hero" class="nav-link hover:text-teal-700 transition-colors">Home</a>
+          <a href="#about" class="nav-link hover:text-teal-700 transition-colors">About</a>
+          <a href="#skills" class="nav-link hover:text-teal-700 transition-colors">Skills</a>
+          <a href="#projects" class="nav-link hover:text-teal-700 transition-colors">Projects</a>
+          <a href="#experience" class="nav-link hover:text-teal-700 transition-colors">Experience</a>
+          <a href="#contact" class="nav-link hover:text-teal-700 transition-colors">Contact</a>
+        </div>
+        <button id="hamburger" class="mobile-menu-btn flex-col gap-1.5 bg-transparent border-none cursor-pointer p-2" aria-label="Menu">
+          <span class="w-6 h-0.5 bg-slate-700 block transition-all"></span>
+          <span class="w-6 h-0.5 bg-slate-700 block transition-all"></span>
+          <span class="w-6 h-0.5 bg-slate-700 block transition-all"></span>
+        </button>
+      </div>
+      <div id="mobile-menu" class="mobile-menu flex-col md:hidden bg-white border-t border-slate-100 px-6 py-4 gap-4 text-sm font-medium text-slate-600">
+        <a href="#hero" class="hover:text-teal-700 transition-colors">Home</a>
+        <a href="#about" class="hover:text-teal-700 transition-colors">About</a>
+        <a href="#skills" class="hover:text-teal-700 transition-colors">Skills</a>
+        <a href="#projects" class="hover:text-teal-700 transition-colors">Projects</a>
+        <a href="#experience" class="hover:text-teal-700 transition-colors">Experience</a>
+        <a href="#contact" class="hover:text-teal-700 transition-colors">Contact</a>
+      </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="min-h-screen flex items-center justify-center fiber-pattern pt-20 relative overflow-hidden">
+      <div class="absolute top-1/4 left-10 w-32 h-32 bg-teal-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+      <div class="absolute bottom-1/4 right-10 w-48 h-48 bg-cyan-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delayed"></div>
+
+      <div class="max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center relative z-10">
+        <div data-aos="fade-up" data-aos-duration="1000">
+          <div class="mono text-xs text-teal-700 mb-4 tracking-widest font-semibold uppercase">
+            Textile Technology Student
+          </div>
+          <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight tracking-tight liquid-text pb-2">Boomika S</h1>
+          <p class="text-xl text-slate-600 mb-8 leading-relaxed max-w-lg">
+            <span class="text-slate-900 font-medium">Merchandising &amp; Quality Aspirant</span> focused on
+            <span class="text-slate-900 font-medium">sustainable textiles</span>,
+            <span class="text-slate-900 font-medium">sourcing</span>, and
+            <span class="text-slate-900 font-medium">quality excellence</span>.
+          </p>
+          <div class="flex gap-4 flex-wrap">
+            <a href="#projects" class="px-6 py-3 bg-gradient-to-r from-teal-700 to-cyan-700 text-white rounded-lg font-medium shadow-lg shadow-teal-700/20 hover:shadow-xl hover:shadow-teal-700/30 hover:-translate-y-1 transition-all duration-300">View Work</a>
+            <a href="#contact" class="px-5 py-3 border border-slate-300 text-slate-700 rounded-lg font-medium hover:border-teal-700 hover:text-teal-700 transition-all bg-white/50 backdrop-blur-sm">Contact</a>
+          </div>
+        </div>
+
+        <div class="relative -mt-12 md:-mt-24" data-aos="zoom-out" data-aos-duration="1200" data-aos-delay="200">
+          <div class="w-72 h-72 md:w-96 md:h-96 mx-auto relative group">
+            <div class="absolute inset-0 bg-gradient-to-br from-teal-100 to-cyan-100 rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+            <div class="absolute inset-4 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-2xl shadow-slate-200 border-4 border-white">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full p-8">
+                <defs>
+                  <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#F6E7B4" />
+                    <stop offset="100%" stop-color="#E8B4B0" />
+                  </linearGradient>
+                </defs>
+                <circle cx="100" cy="100" r="80" fill="url(#grad)" opacity="0.6" />
+              </svg>
+            </div>
+            <div class="absolute -top-2 -right-2 bg-white/90 backdrop-blur border border-slate-100 rounded-xl shadow-lg px-4 py-2 mono text-xs text-slate-600 animate-float">
+              <span class="text-teal-600">&#9679;</span> Open to Opportunities
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-20 bg-white border-t border-slate-100">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-right">01 / WHO I AM</div>
+        <h2 class="text-3xl font-bold text-slate-900 mb-12 title-glow inline-block" data-aos="fade-right" data-aos-delay="100">About Me</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="md:col-span-2" data-aos="fade-up" data-aos-delay="200">
+            <p class="text-lg text-slate-600 leading-relaxed mb-6">
+              Passionate Textile Technology undergraduate with hands‑on experience across spinning, weaving, garment manufacturing, and export‑house operations. I blend technical knowledge with a sustainability mindset, aiming to drive efficient sourcing and rigorous quality assurance in the fashion supply chain.
+            </p>
+          </div>
+          <div class="space-y-4" data-aos="fade-left" data-aos-delay="300">
+            <div class="bg-slate-50 rounded-lg p-5 border-l-4 border-teal-600 hover:bg-slate-100 transition-colors">
+              <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Discipline</div>
+              <div class="font-semibold text-slate-800">B.Tech Textile Technology</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-5 border-l-4 border-cyan-600 hover:bg-slate-100 transition-colors">
+              <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Focus Area</div>
+              <div class="font-semibold text-slate-800">Merchandising &amp; Quality</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-5 border-l-4 border-slate-600 hover:bg-slate-100 transition-colors">
+              <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Mindset</div>
+              <div class="font-semibold text-slate-800">Sustainability-Driven</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section id="skills" class="py-20 bg-slate-50">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-up">02 / CORE COMPETENCIES</div>
+        <h2 class="text-3xl font-bold text-slate-900 mb-12 title-glow inline-block" data-aos="fade-up" data-aos-delay="100">Skills</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800">
+            <div class="w-12 h-12 bg-teal-50 rounded-lg flex items-center justify-center mb-4 text-teal-700">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 L12 6 M12 18 L12 22 M4.93 4.93 L7.76 7.76 M16.24 16.24 L19.07 19.07 M2 12 L6 12 M18 12 L22 12 M4.93 19.07 L7.76 16.24 M16.24 7.76 L19.07 4.93" /></svg>
+            </div>
+            <h3 class="font-semibold text-slate-900 mb-2">Textile Manufacturing</h3>
+            <p class="text-sm text-slate-500 mb-4">Spinning, Weaving, Fabric Testing, Garment Production</p>
+            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-11/12"></div></div>
+          </div>
+
+          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="100">
+            <div class="w-12 h-12 bg-cyan-50 rounded-lg flex items-center justify-center mb-4 text-cyan-700">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <h3 class="font-semibold text-slate-900 mb-2">Quality Control</h3>
+            <p class="text-sm text-slate-500 mb-4">AQL testing, inspection, lab analysis</p>
+            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-4/5"></div></div>
+          </div>
+
+          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="200">
+            <div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center mb-4 text-slate-700">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+            </div>
+            <h3 class="font-semibold text-slate-900 mb-2">Merchandising Basics</h3>
+            <p class="text-sm text-slate-500 mb-4">Vendor coordination, order follow‑up, sample development</p>
+            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-10/12"></div></div>
+          </div>
+
+          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="300">
+            <div class="w-12 h-12 bg-teal-50 rounded-lg flex items-center justify-center mb-4 text-teal-800">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8m-4-4v4" /></svg>
+            </div>
+            <h3 class="font-semibold text-slate-900 mb-2">Design Tools</h3>
+            <p class="text-sm text-slate-500 mb-4">Adobe Photoshop, Illustrator, AutoCAD, Fusion 360</p>
+            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-9/12"></div></div>
+          </div>
+
+          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="400">
+            <div class="w-12 h-12 bg-sky-50 rounded-lg flex items-center justify-center mb-4 text-sky-700">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" /></svg>
+            </div>
+            <h3 class="font-semibold text-slate-900 mb-2">Digital &amp; Data</h3>
+            <p class="text-sm text-slate-500 mb-4">Digital marketing basics, data‑analysis fundamentals</p>
+            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-4/5"></div></div>
+          </div>
+
+          <div class="bg-white rounded-xl p-6 card-hover border border-slate-200" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="500">
+            <div class="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-4 text-indigo-700">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+            </div>
+            <h3 class="font-semibold text-slate-900 mb-2">Soft Skills</h3>
+            <p class="text-sm text-slate-500 mb-4">Creative problem‑solving, data‑driven decision making</p>
+            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="skill-bar w-3/4"></div></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section id="projects" class="py-20 bg-white">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-up">03 / INNOVATION &amp; RESEARCH</div>
+        <h2 class="text-3xl font-bold text-slate-900 mb-12 title-glow inline-block" data-aos="fade-up" data-aos-delay="100">Projects</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+
+          <div class="group bg-slate-50 rounded-2xl p-8 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="0">
+            <div class="mono text-xs text-teal-700 mb-4 font-semibold">SUSTAINABILITY</div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-teal-700 transition-colors">Laser‑Based Indigo Dye Removal</h3>
+            <p class="text-slate-600 mb-6">Laser system eliminates chemicals and saves water in denim processing.</p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Sustainability</span>
+              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Innovation</span>
+            </div>
+            <div class="flex items-center gap-4 text-sm text-slate-500">
+              <span class="text-teal-700 font-medium">&#128167; Water Conservation</span> &bull; Chemical-Free Process
+            </div>
+          </div>
+
+          <div class="group bg-slate-50 rounded-2xl p-8 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="100">
+            <div class="mono text-xs text-teal-700 mb-4 font-semibold">RENEWABLE ENERGY</div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-teal-700 transition-colors">Solar Pirn Winding Machine</h3>
+            <p class="text-slate-600 mb-6">Solar‑powered winding reduces energy costs for rural handloom weavers.</p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Energy</span>
+              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Innovation</span>
+            </div>
+            <div class="flex items-center gap-4 text-sm text-slate-500">
+              <span class="text-teal-700 font-medium">&#9728; Solar Powered</span> &bull; Rural Impact
+            </div>
+          </div>
+
+          <div class="group bg-slate-50 rounded-2xl p-8 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="200">
+            <div class="mono text-xs text-teal-700 mb-4 font-semibold">SOCIAL IMPACT</div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-teal-700 transition-colors">Biodegradable Sanitary Napkins</h3>
+            <p class="text-slate-600 mb-6">Eco‑friendly sanitary product using natural textile fibers.</p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Social</span>
+              <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs text-slate-600">Sustainability</span>
+            </div>
+            <div class="flex items-center gap-4 text-sm text-slate-500">
+              <span class="text-teal-700 font-medium">&#127793; Eco-Friendly</span> &bull; Natural Fibers
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION -->
+    <section id="experience" class="py-20 bg-slate-50">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-right">04 / INDUSTRY EXPOSURE</div>
+        <h2 class="text-3xl font-bold text-slate-900 mb-12 title-glow inline-block" data-aos="fade-right" data-aos-delay="100">Experience</h2>
+        <div class="space-y-6">
+
+          <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="0">
+            <div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">&#127754;</div>
+            <div class="flex-grow">
+              <h3 class="text-lg font-bold text-slate-900 mb-2">Santhosh Spinning Mills</h3>
+              <p class="text-slate-600 text-sm">Production &amp; QC exposure – yarn spinning, quality checkpoints.</p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="100">
+            <div class="w-16 h-16 bg-cyan-50 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">&#128087;</div>
+            <div class="flex-grow">
+              <h3 class="text-lg font-bold text-slate-900 mb-2">Praveen Tex</h3>
+              <p class="text-slate-600 text-sm">Garment manufacturing &amp; printing – stitching, in‑line QC.</p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="200">
+            <div class="w-16 h-16 bg-slate-50 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">&#127760;</div>
+            <div class="flex-grow">
+              <h3 class="text-lg font-bold text-slate-900 mb-2">Eastman Exports</h3>
+              <p class="text-slate-600 text-sm">Export‑oriented production – buyer specs, documentation.</p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6 card-hover border border-slate-200" data-aos="fade-up" data-aos-delay="300">
+            <div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">&#128085;</div>
+            <div class="flex-grow">
+              <h3 class="text-lg font-bold text-slate-900 mb-2">Value Fashion</h3>
+              <p class="text-slate-600 text-sm">Fast‑fashion cycles – fabric inspection, costing basics.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS SECTION -->
+    <section id="achievements" class="py-20 bg-white">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-up">05 / RECOGNITION</div>
+        <h2 class="text-3xl font-bold text-slate-900 mb-12 title-glow inline-block" data-aos="fade-up" data-aos-delay="100">Achievements</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+
+          <div class="border border-slate-200 rounded-xl p-6 hover:border-teal-500 transition-colors bg-slate-50 group hover:-translate-y-2 duration-300" data-aos="fade-up" data-aos-delay="0">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-slate-200 text-teal-600 group-hover:scale-110 transition-transform">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+              </div>
+            </div>
+            <h3 class="font-semibold text-slate-900 mb-1">Handloom Hackathon Finalist</h3>
+            <p class="text-sm text-slate-500">IIT Delhi</p>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl p-6 hover:border-cyan-500 transition-colors bg-slate-50 group hover:-translate-y-2 duration-300" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-slate-200 text-cyan-600 group-hover:scale-110 transition-transform">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+              </div>
+            </div>
+            <h3 class="font-semibold text-slate-900 mb-1">Poster Exhibition Winner</h3>
+            <p class="text-sm text-slate-500">Sustainable Textile Research</p>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl p-6 hover:border-teal-600 transition-colors bg-slate-50 group hover:-translate-y-2 duration-300" data-aos="fade-up" data-aos-delay="200">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-slate-200 text-teal-700 group-hover:scale-110 transition-transform">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+              </div>
+            </div>
+            <h3 class="font-semibold text-slate-900 mb-1">Academic Achiever Award</h3>
+            <p class="text-sm text-slate-500">B.Tech Textile Technology</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-20 bg-slate-50 border-t border-slate-200">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="mono text-xs text-teal-600 mb-2 tracking-widest font-bold" data-aos="fade-up">06 / GET IN TOUCH</div>
+        <h2 class="text-3xl font-bold text-slate-900 mb-4 title-glow inline-block" data-aos="fade-up" data-aos-delay="100">Contact</h2>
+        <p class="text-slate-600 mb-12 max-w-xl" data-aos="fade-up" data-aos-delay="150">Feel free to reach out for collaborations, opportunities, or just a conversation about textiles and sustainability.</p>
+        <div class="grid md:grid-cols-3 gap-6">
+
+          <a href="mailto:boomika@email.com" class="flex items-center gap-4 p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow card-hover" data-aos="fade-right" data-aos-delay="200" id="contact-email">
+            <div class="w-12 h-12 bg-teal-50 rounded-lg flex items-center justify-center text-teal-700">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+            </div>
+            <div>
+              <div class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Email</div>
+              <div class="font-medium text-slate-900">boomika@email.com</div>
+            </div>
+          </a>
+
+          <a href="tel:+919999999999" class="flex items-center gap-4 p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow card-hover" data-aos="fade-right" data-aos-delay="300" id="contact-phone">
+            <div class="w-12 h-12 bg-cyan-50 rounded-lg flex items-center justify-center text-cyan-700">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+            </div>
+            <div>
+              <div class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Phone</div>
+              <div class="font-medium text-slate-900">+91 99999 99999</div>
+            </div>
+          </a>
+
+          <a href="https://linkedin.com/in/boomika-s" target="_blank" class="flex items-center gap-4 p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow card-hover" data-aos="fade-right" data-aos-delay="400" id="contact-linkedin">
+            <div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center text-slate-700">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
+            </div>
+            <div>
+              <div class="text-xs text-slate-400 uppercase tracking-wide font-semibold">LinkedIn</div>
+              <div class="font-medium text-teal-700">linkedin.com/in/boomika-s</div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-8 bg-white border-t border-slate-200 text-slate-500">
+      <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-2">
+          <svg class="w-6 h-6 text-teal-700" viewBox="0 0 32 32" fill="none">
+            <path d="M4 8 Q16 4 28 8" stroke="currentColor" stroke-width="2" fill="none" />
+            <path d="M4 16 Q16 12 28 16" stroke="currentColor" stroke-width="2" fill="none" />
+            <path d="M4 24 Q16 20 28 24" stroke="currentColor" stroke-width="2" fill="none" />
+          </svg>
+          <span class="mono text-sm font-bold text-slate-900">&copy; 2024 Boomika S</span>
+        </div>
+        <div class="mono text-xs">Textile Technology Undergraduate &bull; Merchandising &amp; Quality Specialist</div>
+      </div>
+    </footer>
+
+    <!-- STREAK WIDGET -->
+    <div id="streak-widget" class="streak-widget">
+      <button id="streak-toggle" class="streak-toggle" aria-label="Toggle Streak Tracker">
+        <span class="fire-icon">&#128293;</span>
       </button>
+      <div id="streak-panel" class="streak-panel">
+        <div class="streak-header">
+          <h3>&#128293; Streak Tracker</h3>
+          <button id="streak-close" class="streak-close" aria-label="Close">&times;</button>
+        </div>
+        <div id="streak-reminder" class="streak-reminder hidden">
+          <p>&#9888;&#65039; You have incomplete tasks today!</p>
+        </div>
+        <div id="streak-summary" class="streak-summary"></div>
+        <ul id="task-list" class="task-list"></ul>
+        <div class="add-task">
+          <input type="text" id="new-task-input" placeholder="Add a new task..." maxlength="50" />
+          <button id="add-task-btn" class="btn-add">Add</button>
+        </div>
+        <div id="countdown-section" class="countdown-section hidden">
+          <p class="countdown-label">Day ends in</p>
+          <p id="countdown-timer" class="countdown-timer"></p>
+        </div>
+      </div>
     </div>
-  </nav>
 
-  <!-- HERO SECTION -->
-  <section id="hero" class="section hero-section">
-    <div class="container hero-inner">
-      <div class="hero-text fade-in">
-        <p class="hero-label">Textile Technology Student</p>
-        <h1 class="hero-name">Boomika S</h1>
-        <h2 class="hero-title">Merchandising &amp; Quality Aspirant</h2>
-        <p class="hero-tagline">Focused on sustainable textiles, sourcing, and quality excellence</p>
-        <div class="hero-cta">
-          <a href="#projects" class="btn btn-primary">View Work</a>
-          <a href="#contact" class="btn btn-outline">Contact</a>
-        </div>
-      </div>
-      <div class="hero-illustration fade-in">
-        <!-- Soft textile‑inspired abstract SVG -->
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="illustration-svg">
-          <defs>
-            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#F6E7B4" />
-              <stop offset="100%" stop-color="#E8B4B0" />
-            </linearGradient>
-          </defs>
-          <circle cx="100" cy="100" r="80" fill="url(#grad)" opacity="0.6" />
-        </svg>
-      </div>
-    </div>
-  </section>
-
-  <!-- About Section -->
-  <section id="about" class="section">
-    <div class="container">
-      <div class="section-header fade-in">
-        <p class="section-label">Who I Am</p>
-        <h2 class="section-title">About Me</h2>
-      </div>
-      <p class="about-text fade-in">
-        Passionate Textile Technology undergraduate with hands‑on experience across spinning, weaving, garment
-        manufacturing, and export‑house operations. I blend technical knowledge with a sustainability mindset, aiming to
-        drive efficient sourcing and rigorous quality assurance in the fashion supply chain.
-      </p>
-    </div>
-  </section>
-
-  <!-- Skills Section -->
-  <section id="skills" class="section section-alt">
-    <div class="container">
-      <div class="section-header fade-in">
-        <p class="section-label">Core Competencies</p>
-        <h2 class="section-title">Skills</h2>
-      </div>
-      <div class="skills-grid fade-in">
-        <div class="skill-card">
-          <h3>Textile Manufacturing</h3>
-          <p>Spinning, Weaving, Fabric Testing, Garment Production</p>
-        </div>
-        <div class="skill-card">
-          <h3>Quality Control</h3>
-          <p>AQL testing, inspection, lab analysis</p>
-        </div>
-        <div class="skill-card">
-          <h3>Merchandising Basics</h3>
-          <p>Vendor coordination, order follow‑up, sample development</p>
-        </div>
-        <div class="skill-card">
-          <h3>Design Tools</h3>
-          <p>Adobe Photoshop, Illustrator, AutoCAD, Fusion 360</p>
-        </div>
-        <div class="skill-card">
-          <h3>Digital &amp; Data</h3>
-          <p>Digital marketing basics, data‑analysis fundamentals</p>
-        </div>
-        <div class="skill-card">
-          <h3>Soft Skills</h3>
-          <p>Creative problem‑solving, data‑driven decision making</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Projects Section -->
-  <section id="projects" class="section">
-    <div class="container">
-      <div class="section-header fade-in">
-        <p class="section-label">Innovation &amp; Research</p>
-        <h2 class="section-title">Projects</h2>
-      </div>
-      <div class="projects-grid fade-in">
-        <div class="project-card">
-          <h3>Laser‑Based Indigo Dye Removal</h3>
-          <p>Laser system eliminates chemicals and saves water in denim processing.</p>
-          <div class="project-tags"><span>Sustainability</span> <span>Innovation</span></div>
-        </div>
-        <div class="project-card">
-          <h3>Solar Pirn Winding Machine</h3>
-          <p>Solar‑powered winding reduces energy costs for rural handloom weavers.</p>
-          <div class="project-tags"><span>Energy</span> <span>Innovation</span></div>
-        </div>
-        <div class="project-card">
-          <h3>Biodegradable Sanitary Napkins</h3>
-          <p>Eco‑friendly sanitary product using natural textile fibers.</p>
-          <div class="project-tags"><span>Social</span> <span>Sustainability</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Experience Section -->
-  <section id="experience" class="section section-alt">
-    <div class="container">
-      <div class="section-header fade-in">
-        <p class="section-label">Industry Exposure</p>
-        <h2 class="section-title">Experience</h2>
-      </div>
-      <div class="experience-grid fade-in">
-        <div class="experience-card">
-          <h3>Santhosh Spinning Mills</h3>
-          <p>Production &amp; QC exposure – yarn spinning, quality checkpoints.</p>
-        </div>
-        <div class="experience-card">
-          <h3>Praveen Tex</h3>
-          <p>Garment manufacturing &amp; printing – stitching, in‑line QC.</p>
-        </div>
-        <div class="experience-card">
-          <h3>Eastman Exports</h3>
-          <p>Export‑oriented production – buyer specs, documentation.</p>
-        </div>
-        <div class="experience-card">
-          <h3>Value Fashion</h3>
-          <p>Fast‑fashion cycles – fabric inspection, costing basics.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Achievements Section -->
-  <section id="achievements" class="section">
-    <div class="container">
-      <div class="section-header fade-in">
-        <p class="section-label">Recognition</p>
-        <h2 class="section-title">Achievements</h2>
-      </div>
-      <ul class="achievements-list fade-in">
-        <li>🏆 Handloom Hackathon Finalist – IIT Delhi</li>
-        <li>🎖️ Poster Exhibition Winner – Sustainable Textile Research</li>
-        <li>⭐ Academic Achiever Award – B.Tech Textile Technology</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact" class="section">
-    <div class="container">
-      <div class="section-header fade-in">
-        <p class="section-label">Get In Touch</p>
-        <h2 class="section-title">Contact</h2>
-      </div>
-      <div class="contact-grid fade-in">
-        <a href="mailto:boomika@email.com" class="contact-card" id="contact-email">
-          <div class="contact-icon">✉️</div>
-          <h3>Email</h3>
-          <p>boomika@email.com</p>
-        </a>
-        <a href="tel:+919999999999" class="contact-card" id="contact-phone">
-          <div class="contact-icon">📞</div>
-          <h3>Phone</h3>
-          <p>+91 99999 99999</p>
-        </a>
-        <a href="https://linkedin.com/in/boomika-s" target="_blank" class="contact-card" id="contact-linkedin">
-          <div class="contact-icon">💼</div>
-          <h3>LinkedIn</h3>
-          <p>linkedin.com/in/boomika-s</p>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- STREAK WIDGET -->
-  <div id="streak-widget" class="streak-widget">
-    <button id="streak-toggle" class="streak-toggle" aria-label="Toggle Streak Tracker">
-      <span class="fire-icon">🔥</span>
-    </button>
-    <div id="streak-panel" class="streak-panel">
-      <div class="streak-header">
-        <h3>🔥 Streak Tracker</h3>
-        <button id="streak-close" class="streak-close" aria-label="Close">&times;</button>
-      </div>
-      <div id="streak-reminder" class="streak-reminder hidden">
-        <p>⚠️ You have incomplete tasks today!</p>
-      </div>
-      <div id="streak-summary" class="streak-summary"></div>
-      <ul id="task-list" class="task-list"></ul>
-      <div class="add-task">
-        <input type="text" id="new-task-input" placeholder="Add a new task..." maxlength="50" />
-        <button id="add-task-btn" class="btn-add">Add</button>
-      </div>
-      <div id="countdown-section" class="countdown-section hidden">
-        <p class="countdown-label">Day ends in</p>
-        <p id="countdown-timer" class="countdown-timer"></p>
-      </div>
-    </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <p class="footer-name">Boomika S</p>
-      <p class="footer-sub">Textile Technology Undergraduate • Merchandising &amp; Quality Specialist</p>
-      <p class="footer-copy">© 2024 Boomika S. Crafted with purpose.</p>
-    </div>
-  </footer>
-
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="script.js"></script>
 </body>
-
 </html>

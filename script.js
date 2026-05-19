@@ -1,60 +1,36 @@
-// script.js
-// Simple interactivity for Boomika Portfolio
+// Initialize AOS scroll animations
+AOS.init({
+  duration: 1000,
+  once: true,
+  offset: 50,
+});
 
-// Smooth scroll is handled by CSS `scroll-behavior: smooth` on html.
-
-// Hamburger menu for mobile navigation
+// Hamburger menu toggle
 const hamburger = document.getElementById('hamburger');
-const navLinks = document.querySelector('.nav-links');
+const mobileMenu = document.getElementById('mobile-menu');
 
-if (hamburger && navLinks) {
+if (hamburger && mobileMenu) {
   hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('show');
-    // Animate hamburger lines
-    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('show');
   });
 }
 
 // Close mobile menu when a link is clicked
-document.querySelectorAll('.nav-links a').forEach(link => {
+mobileMenu?.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => {
-    if (navLinks.classList.contains('show')) {
-      navLinks.classList.remove('show');
-      hamburger.classList.remove('open');
-    }
+    mobileMenu.classList.remove('show');
   });
 });
 
-// Add scroll effect for header background change (optional aesthetic)
-window.addEventListener('scroll', () => {
-  const navbar = document.getElementById('navbar');
-  if (window.scrollY > 50) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
-});
-
-// Simple fade‑in animation trigger for sections (already using CSS animation on load)
-// but we can also add a class when element enters viewport for extra polish.
-const faders = document.querySelectorAll('.fade-in');
-const appearOptions = {
-  threshold: 0.2,
-  rootMargin: '0px 0px -50px 0px'
-};
-const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) {
-      return;
-    } else {
-      entry.target.classList.add('appear');
-      appearOnScroll.unobserve(entry.target);
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   });
-}, appearOptions);
-
-faders.forEach(fader => {
-  appearOnScroll.observe(fader);
 });
 
 // ============ STREAK WIDGET ============
@@ -128,7 +104,7 @@ faders.forEach(fader => {
     if (data.tasks.length > 0) {
       summary.innerHTML = `<span class="summary-badge">Total: ${totalStreak} 🔥</span>`;
     } else {
-      summary.innerHTML = '<p style="font-size:0.85rem;color:#6c757d;">No tasks yet. Add one below!</p>';
+      summary.innerHTML = '<p style="font-size:0.85rem;color:#64748b;">No tasks yet. Add one below!</p>';
     }
   }
 
@@ -217,7 +193,6 @@ faders.forEach(fader => {
     setInterval(update, 1000);
   }
 
-  // Panel toggle
   const toggleBtn = document.getElementById('streak-toggle');
   const panel = document.getElementById('streak-panel');
   const closeBtn = document.getElementById('streak-close');
@@ -229,7 +204,6 @@ faders.forEach(fader => {
     closeBtn.addEventListener('click', () => panel.classList.remove('open'));
   }
 
-  // Add task
   const addBtn = document.getElementById('add-task-btn');
   const input = document.getElementById('new-task-input');
 
@@ -249,7 +223,6 @@ faders.forEach(fader => {
     });
   }
 
-  // Task list events
   document.getElementById('task-list').addEventListener('click', e => {
     if (e.target.classList.contains('task-checkbox')) {
       toggleTask(Number(e.target.dataset.id));
@@ -258,7 +231,6 @@ faders.forEach(fader => {
     }
   });
 
-  // Init
   const data = checkStreaks(loadData());
   renderTasks(data);
   startCountdown();
