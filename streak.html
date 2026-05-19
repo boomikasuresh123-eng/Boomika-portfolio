@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streak Tracker</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: transparent;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  #widget {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    z-index: 99999;
+    cursor: move;
+  }
+
+  #compact {
+    width: 120px;
+    height: 120px;
+    background: #E8B4B0;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(232,180,176,0.6);
+    border: 3px solid #d09a95;
+    transition: transform 0.2s;
+  }
+
+  #compact:hover {
+    transform: scale(1.05);
+  }
+
+  #compact .fire {
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+
+  #compact .count {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #4A3F35;
+  }
+
+  #panel {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 130px;
+    width: 300px;
+    max-height: 80vh;
+    background: #FFFDF8;
+    border: 2px solid #EDE3D9;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  #panel.open {
+    display: block;
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+  }
+
+  .panel-header h3 {
+    font-size: 1.1rem;
+    color: #4A3F35;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #4A3F35;
+  }
+
+  .reminder {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-bottom: 0.8rem;
+    font-size: 0.8rem;
+    color: #856404;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    margin-bottom: 0.4rem;
+    background: #F8F4ED;
+    cursor: pointer;
+  }
+
+  .task-item.completed {
+    background: #d4edda;
+  }
+
+  .task-item.completed .task-name {
+    text-decoration: line-through;
+    color: #6c757d;
+  }
+
+  .task-name {
+    flex: 1;
+    font-size: 0.9rem;
+    color: #4A3F35;
+  }
+
+  .streak-badge {
+    background: #ff6b6b;
+    color: #fff;
+    border-radius: 10px;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  .streak-badge.zero {
+    background: #adb5bd;
+  }
+
+  .delete-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .task-item:hover .delete-btn {
+    opacity: 1;
+  }
+
+  .add-task {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+
+  .add-task input {
+    flex: 1;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #EDE3D9;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #F8F4ED;
+  }
+
+  .add-btn {
+    padding: 0.4rem 0.8rem;
+    background: #E8B4B0;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .summary {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #4A3F35;
+  }
+
+  #countdown {
+    margin-top: 0.8rem;
+    text-align: center;
+    padding: 0.5rem;
+    background: #f8d7da;
+    border-radius: 8px;
+    display: none;
+  }
+
+  #countdown.urgent {
+    background: #dc3545;
+    color: #fff;
+  }
+
+  #countdown p:first-child {
+    font-size: 0.75rem;
+    margin-bottom: 0.2rem;
+  }
+
+  #countdown-timer {
+    font-size: 1.3rem;
+    font-weight: bold;
+    font-family: monospace;
+  }
+</style>
+</head>
+<body>
+<div id="widget">
+  <div id="compact" onclick="togglePanel()">
+    <div class="fire">🔥</div>
+    <div class="count" id="total-count">0</div>
+  </div>
+  <div id="panel">
+    <div class="panel-header">
+      <h3>Streak Tracker</h3>
+      <button class="close-btn" onclick="togglePanel()">&times;</button>
+    </div>
+    <div id="reminder" class="reminder" style="display:none;">You have incomplete tasks today!</div>
+    <div id="task-list"></div>
+    <div class="summary" id="summary"></div>
+    <div class="add-task">
+      <input type="text" id="new-task" placeholder="Add a task..." maxlength="50" onkeypress="if(event.key==='Enter')addTask()">
+      <button class="add-btn" onclick="addTask()">Add</button>
+    </div>
+    <div id="countdown">
+      <p>Day ends in</p>
+      <p id="countdown-timer"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'streakTrackerData';
+const getToday = () => new Date().toISOString().split('T')[0];
+const getYesterday = () => { const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().split('T')[0]; };
+
+function loadData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  return raw ? JSON.parse(raw) : { tasks: [], lastCheckedDate: null };
+}
+
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function checkStreaks(data) {
+  const today = getToday();
+  if (data.lastCheckedDate === today) return data;
+  const yesterday = getYesterday();
+  data.tasks = data.tasks.map(t => {
+    if (t.lastCompletedDate !== yesterday && t.lastCompletedDate !== today) t.streak = 0;
+    return t;
+  });
+  data.lastCheckedDate = today;
+  saveData(data);
+  return data;
+}
+
+function render() {
+  const data = loadData();
+  const today = getToday();
+  const list = document.getElementById('task-list');
+  const reminder = document.getElementById('reminder');
+  const summary = document.getElementById('summary');
+  const totalCount = document.getElementById('total-count');
+
+  list.innerHTML = '';
+  let allDone = true;
+  let total = 0;
+
+  data.tasks.forEach(task => {
+    const done = task.lastCompletedDate === today;
+    if (!done) allDone = false;
+    total += task.streak;
+
+    const div = document.createElement('div');
+    div.className = `task-item${done ? ' completed' : ''}`;
+    div.innerHTML = `
+      <span class="task-name">${escapeHtml(task.name)}</span>
+      <span class="streak-badge ${task.streak===0?'zero':''}">${task.streak}</span>
+      <button class="delete-btn" onclick="event.stopPropagation();deleteTask(${task.id})">&times;</button>
+    `;
+    div.onclick = () => toggleTask(task.id);
+    list.appendChild(div);
+  });
+
+  reminder.style.display = (!allDone && data.tasks.length > 0) ? 'block' : 'none';
+  summary.textContent = data.tasks.length > 0 ? `Total: ${total} 🔥` : 'No tasks yet. Add one!';
+  totalCount.textContent = total;
+}
+
+function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+function addTask() {
+  const input = document.getElementById('new-task');
+  const name = input.value.trim();
+  if (!name) return;
+  const data = loadData();
+  data.tasks.push({ id: Date.now(), name, streak: 0, lastCompletedDate: null });
+  saveData(data);
+  input.value = '';
+  render();
+}
+
+function toggleTask(id) {
+  const data = loadData();
+  const today = getToday();
+  const task = data.tasks.find(t => t.id === id);
+  if (!task) return;
+  if (task.lastCompletedDate === today) {
+    task.streak = Math.max(0, task.streak - 1);
+    task.lastCompletedDate = null;
+  } else {
+    if (task.lastCompletedDate === getYesterday() || task.streak === 0) task.streak++;
+    else if (task.lastCompletedDate !== today) task.streak = 1;
+    task.lastCompletedDate = today;
+  }
+  saveData(data);
+  render();
+}
+
+function deleteTask(id) {
+  const data = loadData();
+  data.tasks = data.tasks.filter(t => t.id !== id);
+  saveData(data);
+  render();
+}
+
+function togglePanel() {
+  document.getElementById('panel').classList.toggle('open');
+}
+
+function startCountdown() {
+  const el = document.getElementById('countdown');
+  const timer = document.getElementById('countdown-timer');
+  setInterval(() => {
+    const now = new Date();
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0);
+    const diff = midnight - now;
+    const hoursLeft = diff / (1000*60*60);
+    if (hoursLeft <= 2) {
+      el.style.display = 'block';
+      const h = Math.floor(diff/(1000*60*60));
+      const m = Math.floor((diff%(1000*60*60))/(1000*60));
+      const s = Math.floor((diff%(1000*60))/1000);
+      timer.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      el.className = hoursLeft <= 0.5 ? 'urgent' : '';
+    } else {
+      el.style.display = 'none';
+    }
+  }, 1000);
+}
+
+// Drag functionality
+let isDragging = false;
+let dragOffset = { x: 0, y: 0 };
+const widget = document.getElementById('widget');
+
+widget.addEventListener('mousedown', (e) => {
+  if (e.target.closest('#panel')) return;
+  isDragging = true;
+  dragOffset.x = e.clientX - widget.offsetLeft;
+  dragOffset.y = e.clientY - widget.offsetTop;
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  widget.style.left = (e.clientX - dragOffset.x) + 'px';
+  widget.style.top = (e.clientY - dragOffset.y) + 'px';
+});
+
+document.addEventListener('mouseup', () => {
+  isDragging = false;
+});
+
+// Init
+checkStreaks(loadData());
+render();
+startCountdown();
+</script>
+</body>
+</html>

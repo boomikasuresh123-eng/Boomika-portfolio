@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Streak Tracker</title>
+<HTA:APPLICATION 
+    id="streakHTA"
+    applicationname="Streak Tracker"
+    border="none"
+    caption="no"
+    showintaskbar="yes"
+    singleinstance="yes"
+    sysmenu="no"
+    windowstate="normal"
+    scroll="no"
+    selection="no"
+    contextmenu="no"
+    innerborder="no"
+/>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background: #E8B4B0;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    cursor: move;
+}
+
+#compact {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #E8B4B0;
+    border: 3px solid #d09a95;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+#compact .fire {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+#compact .count {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #4A3F35;
+}
+
+#panel {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 130px;
+    width: 300px;
+    height: 400px;
+    background: #FFFDF8;
+    border: 2px solid #EDE3D9;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+#panel.open { display: block; }
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.panel-header h3 { font-size: 1.1rem; color: #4A3F35; margin: 0; }
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #4A3F35;
+}
+
+.reminder {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-bottom: 0.8rem;
+    font-size: 0.8rem;
+    color: #856404;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    margin-bottom: 0.4rem;
+    background: #F8F4ED;
+    cursor: pointer;
+}
+
+.task-item.completed { background: #d4edda; }
+.task-item.completed .task-name { text-decoration: line-through; color: #6c757d; }
+
+.task-name { flex: 1; font-size: 0.9rem; color: #4A3F35; }
+
+.streak-badge {
+    background: #ff6b6b;
+    color: #fff;
+    border-radius: 10px;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.streak-badge.zero { background: #adb5bd; }
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.add-task {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+}
+
+.add-task input {
+    flex: 1;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #EDE3D9;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #F8F4ED;
+}
+
+.add-btn {
+    padding: 0.4rem 0.8rem;
+    background: #E8B4B0;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.summary {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #4A3F35;
+}
+
+#countdown {
+    margin-top: 0.8rem;
+    text-align: center;
+    padding: 0.5rem;
+    background: #f8d7da;
+    border-radius: 8px;
+    display: none;
+}
+
+#countdown.urgent { background: #dc3545; color: #fff; }
+#countdown p:first-child { font-size: 0.75rem; margin-bottom: 0.2rem; }
+#countdown-timer { font-size: 1.3rem; font-weight: bold; font-family: monospace; }
+</style>
+
+<script>
+const fso = new ActiveXObject('Scripting.FileSystemObject');
+const storagePath = fso.BuildPath(fso.GetParentFolderName(window.location.href.replace('file:///', '').replace(/\//g, '\\')), 'streak_data.json');
+
+function getToday() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function getYesterday() {
+    const d = new Date();
+    d.setDate(d.getDate()-1);
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function loadData() {
+    if (fso.FileExists(storagePath)) {
+        const f = fso.OpenTextFile(storagePath, 1);
+        const data = JSON.parse(f.ReadAll());
+        f.Close();
+        return data;
+    }
+    return { tasks: [], lastCheckedDate: null };
+}
+
+function saveData(data) {
+    const f = fso.CreateTextFile(storagePath, true);
+    f.Write(JSON.stringify(data, null, 2));
+    f.Close();
+}
+
+function checkStreaks(data) {
+    const today = getToday();
+    if (data.lastCheckedDate === today) return data;
+    const yesterday = getYesterday();
+    for (let i = 0; i < data.tasks.length; i++) {
+        if (data.tasks[i].lastCompletedDate !== yesterday && data.tasks[i].lastCompletedDate !== today) {
+            data.tasks[i].streak = 0;
+        }
+    }
+    data.lastCheckedDate = today;
+    saveData(data);
+    return data;
+}
+
+function render() {
+    const data = loadData();
+    const today = getToday();
+    const list = document.getElementById('task-list');
+    const reminder = document.getElementById('reminder');
+    const summary = document.getElementById('summary');
+    const totalCount = document.getElementById('total-count');
+
+    list.innerHTML = '';
+    let allDone = true;
+    let total = 0;
+
+    for (let i = 0; i < data.tasks.length; i++) {
+        const task = data.tasks[i];
+        const done = task.lastCompletedDate === today;
+        if (!done) allDone = false;
+        total += task.streak;
+
+        const div = document.createElement('div');
+        div.className = 'task-item' + (done ? ' completed' : '');
+        div.innerHTML = '<span class="task-name">' + task.name + '</span>' +
+            '<span class="streak-badge ' + (task.streak===0 ? 'zero' : '') + '">' + task.streak + '</span>' +
+            '<button class="delete-btn" onclick="event.stopPropagation();deleteTask(' + task.id + ')">&times;</button>';
+        div.onclick = (function(t) { return function() { toggleTask(t.id); }; })(task);
+        list.appendChild(div);
+    }
+
+    reminder.style.display = (!allDone && data.tasks.length > 0) ? 'block' : 'none';
+    summary.textContent = data.tasks.length > 0 ? 'Total: ' + total + ' 🔥' : 'No tasks yet. Add one!';
+    totalCount.textContent = total;
+}
+
+function addTask() {
+    const input = document.getElementById('new-task');
+    const name = input.value.replace(/^\s+|\s+$/g, '');
+    if (!name) return;
+    const data = loadData();
+    data.tasks.push({ id: new Date().getTime(), name: name, streak: 0, lastCompletedDate: null });
+    saveData(data);
+    input.value = '';
+    render();
+}
+
+function toggleTask(id) {
+    const data = loadData();
+    const today = getToday();
+    for (let i = 0; i < data.tasks.length; i++) {
+        if (data.tasks[i].id === id) {
+            const task = data.tasks[i];
+            if (task.lastCompletedDate === today) {
+                task.streak = Math.max(0, task.streak - 1);
+                task.lastCompletedDate = null;
+            } else {
+                if (task.lastCompletedDate === getYesterday() || task.streak === 0) task.streak++;
+                else if (task.lastCompletedDate !== today) task.streak = 1;
+                task.lastCompletedDate = today;
+            }
+            break;
+        }
+    }
+    saveData(data);
+    render();
+}
+
+function deleteTask(id) {
+    const data = loadData();
+    const filtered = [];
+    for (let i = 0; i < data.tasks.length; i++) {
+        if (data.tasks[i].id !== id) filtered.push(data.tasks[i]);
+    }
+    data.tasks = filtered;
+    saveData(data);
+    render();
+}
+
+function togglePanel() {
+    const panel = document.getElementById('panel');
+    panel.className = panel.className === 'open' ? '' : 'open';
+}
+
+function startCountdown() {
+    setInterval(function() {
+        const el = document.getElementById('countdown');
+        const timer = document.getElementById('countdown-timer');
+        const now = new Date();
+        const midnight = new Date();
+        midnight.setHours(24, 0, 0, 0);
+        const diff = midnight - now;
+        const hoursLeft = diff / (1000*60*60);
+        if (hoursLeft <= 2) {
+            el.style.display = 'block';
+            const h = Math.floor(diff/(1000*60*60));
+            const m = Math.floor((diff%(1000*60*60))/(1000*60));
+            const s = Math.floor((diff%(1000*60))/1000);
+            timer.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+            el.className = hoursLeft <= 0.5 ? 'urgent' : '';
+        } else {
+            el.style.display = 'none';
+        }
+    }, 1000);
+}
+
+window.onload = function() {
+    checkStreaks(loadData());
+    render();
+    startCountdown();
+};
+</script>
+</head>
+<body onclick="togglePanel()">
+<div id="compact">
+    <div class="fire">🔥</div>
+    <div class="count" id="total-count">0</div>
+</div>
+<div id="panel">
+    <div class="panel-header">
+        <h3>Streak Tracker</h3>
+        <button class="close-btn" onclick="event.stopPropagation();togglePanel()">&times;</button>
+    </div>
+    <div id="reminder" class="reminder">You have incomplete tasks today!</div>
+    <div id="task-list"></div>
+    <div class="summary" id="summary"></div>
+    <div class="add-task">
+        <input type="text" id="new-task" placeholder="Add a task..." maxlength="50" onkeypress="if(event.key==='Enter'){event.stopPropagation();addTask();}">
+        <button class="add-btn" onclick="event.stopPropagation();addTask()">Add</button>
+    </div>
+    <div id="countdown">
+        <p>Day ends in</p>
+        <p id="countdown-timer"></p>
+    </div>
+</div>
+</body>
+</html>
